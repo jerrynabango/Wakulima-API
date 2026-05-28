@@ -1,0 +1,54 @@
+{% extends "notifications/emails/base/base_email.html" %}
+
+{% block title %}Low Stock Alert - {{ product.name }}{% endblock %}
+
+{% block content %}
+<h2>Low Stock Alert! ⚠️</h2>
+
+<p>Hello <strong>{{ user.full_name }}</strong>,</p>
+
+<p>Your product <strong>{{ product.name }}</strong> is running low on stock and needs your attention.</p>
+
+<div class="warning-box">
+    <strong>📦 Product Details:</strong>
+    <p><strong>Product:</strong> {{ product.name }}</p>
+    <p><strong>Current Stock:</strong> {{ product.quantity }} {{ product.unit_type }}</p>
+    <p><strong>Minimum Stock Level:</strong> {{ product.minimum_stock }} {{ product.unit_type }}</p>
+</div>
+
+<div class="info-box">
+    <strong>🚨 Why This Matters:</strong>
+    <ul style="margin-top: 10px;">
+        <li>Customers may not be able to order this product soon</li>
+        <li>You might miss out on sales opportunities</li>
+        <li>Product could be removed from featured listings</li>
+        <li>Customer satisfaction may be affected</li>
+    </ul>
+</div>
+
+<div style="text-align: center;">
+    <a href="{{ product_url|default:'#' }}" class="button">Update Stock Now</a>
+</div>
+
+<p><strong>Recommended Actions:</strong></p>
+<ul>
+    <li>✓ Update your inventory with current stock levels</li>
+    <li>✓ Harvest/prepare more products if available</li>
+    <li>✓ Temporarily mark as "Out of Stock" if needed</li>
+    <li>✓ Set up reorder reminders for regular products</li>
+</ul>
+
+<p>To avoid stockouts and lost sales, we recommend:</p>
+<ul>
+    <li>Checking your inventory daily</li>
+    <li>Setting higher minimum stock thresholds for popular products</li>
+    <li>Enabling automatic restock notifications</li>
+</ul>
+
+<p>Questions about managing your inventory? Contact our support team at <a href="mailto:{{ support_email }}">{{ support_email }}</a></p>
+
+<p>Keep your stock fresh and your sales flowing!</p>
+
+<p>Best regards,<br>
+<strong>The Wakulima Team</strong></p>
+{% endblock %}

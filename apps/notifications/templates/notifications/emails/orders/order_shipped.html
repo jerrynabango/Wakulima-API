@@ -1,0 +1,48 @@
+{% extends "notifications/emails/base/base_email.html" %}
+
+{% block title %}Order Shipped - {{ order.order_number }}{% endblock %}
+
+{% block content %}
+<h2>Your Order Has Been Shipped! 🚚</h2>
+
+<p>Hello <strong>{{ order.user.full_name }}</strong>,</p>
+
+<p>Great news! Your order <strong>#{{ order.order_number }}</strong> has been shipped and is on its way to you.</p>
+
+<div class="order-details">
+    <h3>Shipping Information</h3>
+    <p><strong>Order Number:</strong> #{{ order.order_number }}</p>
+    <p><strong>Shipped Date:</strong> {{ order.updated_at|date:"F j, Y" }}</p>
+    {% if tracking_number %}
+    <p><strong>Tracking Number:</strong> {{ tracking_number }}</p>
+    {% endif %}
+    <p><strong>Estimated Delivery:</strong> 2-5 business days</p>
+    <p><strong>Delivery Address:</strong> {{ order.shipping_address }}, {{ order.shipping_city }}</p>
+</div>
+
+<div class="info-box">
+    <strong>📋 Delivery Tips:</strong>
+    <ul style="margin-top: 10px;">
+        <li>Have your ID ready for verification</li>
+        <li>Ensure someone is available to receive the delivery</li>
+        <li>Inspect products upon arrival</li>
+        <li>Contact us immediately if any issues</li>
+    </ul>
+</div>
+
+<div style="text-align: center;">
+    <a href="{{ order_url }}" class="button">Track Your Order</a>
+</div>
+
+<p>Once you receive your order, please:</p>
+<ul>
+    <li>✓ Verify all items are correct</li>
+    <li>✓ Check product quality and freshness</li>
+    <li>✓ Leave a review for the farmer</li>
+    <li>✓ Share your experience on social media</li>
+</ul>
+
+<p>Have questions about your delivery? Contact our support team at <a href="mailto:{{ support_email }}">{{ support_email }}</a></p>
+
+<p>Thank you for choosing Wakulima!</p>
+{% endblock %}

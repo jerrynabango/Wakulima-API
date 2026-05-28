@@ -1,0 +1,53 @@
+{% extends "notifications/emails/base/base_email.html" %}
+
+{% block title %}Order Confirmation - {{ order.order_number }}{% endblock %}
+
+{% block content %}
+<h2>Order Confirmed! 🎉</h2>
+
+<p>Hello <strong>{{ order.user.full_name }}</strong>,</p>
+
+<p>Thank you for your order! Your order has been successfully placed and is now being processed.</p>
+
+<div class="order-details">
+    <h3>Order Details</h3>
+    <p><strong>Order Number:</strong> #{{ order.order_number }}</p>
+    <p><strong>Order Date:</strong> {{ order.created_at|date:"F j, Y, g:i a" }}</p>
+    <p><strong>Payment Method:</strong> {{ order.get_payment_method_display }}</p>
+    <p><strong>Shipping Address:</strong> {{ order.shipping_address }}, {{ order.shipping_city }}, {{ order.shipping_zip_code }}</p>
+    
+    <h3>Items Ordered</h3>
+    {% for item in items %}
+    <div class="order-item">
+        <strong>{{ item.product_name }}</strong><br>
+        Quantity: {{ item.quantity }} × KES {{ item.unit_price }} = <strong>KES {{ item.total_price }}</strong>
+    </div>
+    {% endfor %}
+    
+    <div class="total">
+        <strong>Total Amount: KES {{ order.total }}</strong>
+    </div>
+</div>
+
+<div class="info-box">
+    <strong>📦 What's Next?</strong>
+    <ol style="margin-top: 10px;">
+        <li>We'll confirm your payment</li>
+        <li>Farmer will prepare your order</li>
+        <li>Order will be shipped within 24-48 hours</li>
+        <li>You'll receive a tracking number via email/SMS</li>
+        <li>Delivery within 2-5 business days</li>
+    </ol>
+</div>
+
+<div style="text-align: center;">
+    <a href="{{ order_url }}" class="button">Track Your Order</a>
+</div>
+
+<p>Need to make changes to your order? Contact us within 1 hour of placing your order.</p>
+
+<p>Thank you for shopping with Wakulima and supporting local farmers!</p>
+
+<p>Best regards,<br>
+<strong>The Wakulima Team</strong></p>
+{% endblock %}

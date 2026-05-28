@@ -1,0 +1,167 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Django specific
+*.log
+*.pot
+*.pyc
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+static/
+
+# Environment variable
+.env
+
+# Virtual environment
+venv/
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.project
+.classpath
+.settings/
+*.sublime-*
+*.code-workspace
+
+# Python specific
+*.egg-info/
+*.egg
+dist/
+build/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.whl
+*.egg-info/
+.pytest_cache/
+.tox/
+.coverage
+.coverage.*
+.htmlcov/
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.mypy_cache/
+.ruff_cache/
+__pypackages__/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+*.pid
+
+# Redis
+dump.rdb
+
+# Logs
+logs/
+*.log
+logfiles/
+
+# Database backups
+*.bak
+*.sql
+*.sqlite3
+*.db
+
+# Secrets and keys
+*.pem
+*.key
+*.crt
+*.p12
+secrets.json
+secret_key.txt
+
+# Deployment
+.DS_Store
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+*.backup
+
+# Docker
+*.pid
+docker-compose.override.yml
+.docker/
+docker/
+
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Profiling data
+.prof
+*.prof
+
+# Backup files
+*.backup
+*.old
+*.orig
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Project specific
+media/profile_pics/
+media/products/
+media/categories/
+static/admin/
+static/rest_framework/
+static/drf-yasg/
+
+# Coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/

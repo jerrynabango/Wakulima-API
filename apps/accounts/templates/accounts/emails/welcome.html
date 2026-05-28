@@ -1,0 +1,33 @@
+{% extends "base_email.html" %}
+
+{% block title %}Welcome to Wakulima!{% endblock %}
+
+{% block content %}
+<h2>Welcome to Wakulima, {{ user.full_name }}! 🎉</h2>
+
+<p>Thank you for joining Wakulima, Africa's premier agricultural marketplace.</p>
+
+{% if user.role == 'farmer' %}
+<p>As a farmer, you can now:</p>
+<ul>
+    <li>List your agricultural products</li>
+    <li>Reach customers directly</li>
+    <li>Manage your inventory</li>
+    <li>Receive orders and payments</li>
+</ul>
+{% else %}
+<p>As a customer, you can now:</p>
+<ul>
+    <li>Browse fresh farm products</li>
+    <li>Order directly from farmers</li>
+    <li>Track your orders in real-time</li>
+    <li>Get the best prices</li>
+</ul>
+{% endif %}
+
+<div style="text-align: center;">
+    <a href="{{ frontend_url }}/dashboard" class="button">Go to Dashboard</a>
+</div>
+
+<p>Best regards,<br>The Wakulima Team</p>
+{% endblock %}

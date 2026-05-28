@@ -1,0 +1,43 @@
+{% extends "notifications/emails/base/base_email.html" %}
+
+{% block title %}Payment Received - {{ order.order_number }}{% endblock %}
+
+{% block content %}
+<h2>Payment Received! 💰</h2>
+
+<p>Hello <strong>{{ order.user.full_name }}</strong>,</p>
+
+<p>We have successfully received your payment for order <strong>#{{ order.order_number }}</strong>.</p>
+
+<div class="order-details">
+    <h3>Payment Details</h3>
+    <p><strong>Order Number:</strong> #{{ order.order_number }}</p>
+    <p><strong>Payment Amount:</strong> KES {{ payment.amount }}</p>
+    <p><strong>Payment Method:</strong> {{ payment.get_gateway_display }}</p>
+    <p><strong>Payment Date:</strong> {{ payment.paid_at|date:"F j, Y, g:i a" }}</p>
+    {% if payment.transaction_id %}
+    <p><strong>Transaction ID:</strong> {{ payment.transaction_id }}</p>
+    {% endif %}
+</div>
+
+<div class="info-box">
+    <strong>📦 What Happens Next?</strong>
+    <ol style="margin-top: 10px;">
+        <li>✓ Farmer is notified of your order</li>
+        <li>✓ Fresh produce is harvested and packed</li>
+        <li>✓ Order will be shipped within 24 hours</li>
+        <li>✓ You'll receive tracking details via email/SMS</li>
+    </ol>
+</div>
+
+<div style="text-align: center;">
+    <a href="{{ payment_url }}" class="button">View Payment Details</a>
+</div>
+
+<p>Need a receipt for your records? You can download your invoice from your account dashboard.</p>
+
+<p>Thank you for your prompt payment!</p>
+
+<p>Best regards,<br>
+<strong>The Wakulima Team</strong></p>
+{% endblock %}

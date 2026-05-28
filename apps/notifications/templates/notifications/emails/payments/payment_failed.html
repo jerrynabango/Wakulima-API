@@ -1,0 +1,42 @@
+{% extends "notifications/emails/base/base_email.html" %}
+
+{% block title %}Payment Failed - {{ order.order_number }}{% endblock %}
+
+{% block content %}
+<h2>Payment Failed ❌</h2>
+
+<p>Hello <strong>{{ order.user.full_name }}</strong>,</p>
+
+<p>We encountered an issue processing your payment for order <strong>#{{ order.order_number }}</strong>.</p>
+
+<div class="warning-box">
+    <strong>⚠️ Payment Details:</strong>
+    <p><strong>Order Number:</strong> #{{ order.order_number }}</p>
+    <p><strong>Amount:</strong> KES {{ order.total }}</p>
+    <p><strong>Payment Method:</strong> {{ payment.get_gateway_display }}</p>
+</div>
+
+<p>Possible reasons for payment failure:</p>
+<ul>
+    <li>Insufficient funds in your account</li>
+    <li>Incorrect payment details entered</li>
+    <li>Network timeout or connection issues</li>
+    <li>Payment gateway technical difficulties</li>
+</ul>
+
+<div style="text-align: center;">
+    <a href="{{ payment_url }}" class="button">Retry Payment</a>
+</div>
+
+<p>Alternatively, you can:</p>
+<ul>
+    <li>Use a different payment method at checkout</li>
+    <li>Contact your bank to ensure transactions are allowed</li>
+    <li>Try again after a few minutes</li>
+    <li>Contact our support team for assistance</li>
+</ul>
+
+<p>Your order has been saved and will be processed once payment is confirmed.</p>
+
+<p>Need help? Our support team is available 24/7 at <a href="mailto:{{ support_email }}">{{ support_email }}</a></p>
+{% endblock %}

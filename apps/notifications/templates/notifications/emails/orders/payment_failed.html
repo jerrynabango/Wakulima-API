@@ -1,0 +1,37 @@
+{% extends "notifications/emails/base.html" %}
+
+{% block title %}Payment Failed for Order #{{ order.order_number }}{% endblock %}
+{% block header_title %}Payment Failed ❌{% endblock %}
+
+{% block content %}
+<h2>Hello {{ payment.user.full_name }},</h2>
+
+<p>Unfortunately, your payment of <strong>KES {{ payment.amount }}</strong> for order <strong>#{{ order.order_number }}</strong> could not be processed.</p>
+
+<div class="order-details">
+    <h3>Payment Details:</h3>
+    <p><strong>Order Number:</strong> {{ order.order_number }}</p>
+    <p><strong>Amount:</strong> KES {{ payment.amount }}</p>
+    <p><strong>Payment Method:</strong> {{ payment.get_gateway_display }}</p>
+    <p><strong>Status:</strong> {{ payment.get_status_display }}</p>
+    {% if payment.mpesa_result_desc %}
+    <p><strong>Error:</strong> {{ payment.mpesa_result_desc }}</p>
+    {% endif %}
+</div>
+
+<h3>What you can do:</h3>
+<ul>
+    <li>Check your payment method has sufficient funds</li>
+    <li>Try a different payment method</li>
+    <li>Contact your bank if the issue persists</li>
+</ul>
+
+<div style="text-align: center;">
+    <a href="{{ order_url }}" class="button">Try Again</a>
+</div>
+
+<p>If you need assistance, please contact our support team at <a href="mailto:{{ support_email }}">{{ support_email }}</a></p>
+
+<p>Best regards,<br>
+<strong>The Wakulima Team</strong></p>
+{% endblock %}

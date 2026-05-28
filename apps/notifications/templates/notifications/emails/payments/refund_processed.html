@@ -1,0 +1,30 @@
+{% extends "notifications/emails/base.html" %}
+
+{% block title %}Refund Processed for Order #{{ order.order_number }}{% endblock %}
+{% block header_title %}Refund Processed 💰{% endblock %}
+
+{% block content %}
+<h2>Hello {{ order.user.full_name }},</h2>
+
+<p>We have processed your refund of <strong>KES {{ refund.amount }}</strong> for order <strong>#{{ order.order_number }}</strong>.</p>
+
+<div class="order-details">
+    <h3>Refund Details:</h3>
+    <p><strong>Order Number:</strong> {{ order.order_number }}</p>
+    <p><strong>Refund Amount:</strong> KES {{ refund.amount }}</p>
+    <p><strong>Reason:</strong> {{ refund.reason }}</p>
+    <p><strong>Refund Date:</strong> {{ refund.completed_at|date:"F j, Y g:i A" }}</p>
+    <p><strong>Refund ID:</strong> {{ refund.refund_id|default:"Processing" }}</p>
+</div>
+
+<div class="warning">
+    <strong>Note:</strong> The refund will reflect in your account within 5-10 business days, depending on your payment provider.
+</div>
+
+<p>If you don't see the refund within 10 business days, please contact our support team.</p>
+
+<p>We apologize for any inconvenience caused.</p>
+
+<p>Best regards,<br>
+<strong>The Wakulima Team</strong></p>
+{% endblock %}

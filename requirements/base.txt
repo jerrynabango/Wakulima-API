@@ -1,0 +1,21 @@
+Django==5.0.3
+djangorestframework==3.14.0
+djangorestframework-simplejwt==5.3.1
+django-cors-headers==4.3.1
+django-filter==24.2
+django-redis==5.4.0
+django-storages==1.14.2
+Pillow==10.2.0
+psycopg2-binary==2.9.9
+python-dotenv==1.0.1
+celery==5.3.6
+redis==5.0.1
+gunicorn==21.2.0
+uvicorn==0.27.1
+drf-yasg==1.21.7
+django-cleanup==8.0.0
+paypalrestsdk==1.13.3
+sendgrid==6.12.5
+africastalking==2.0.2
+requests==2.34.2
+django-anymail==10.3  # Updated version

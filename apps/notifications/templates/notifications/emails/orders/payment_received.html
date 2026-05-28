@@ -1,0 +1,30 @@
+{% extends "notifications/emails/base.html" %}
+
+{% block title %}Payment Received for Order #{{ order.order_number }}{% endblock %}
+{% block header_title %}Payment Confirmed! 💰{% endblock %}
+
+{% block content %}
+<h2>Hello {{ payment.user.full_name }},</h2>
+
+<p>We have successfully received your payment of <strong>KES {{ payment.amount }}</strong> for order <strong>#{{ order.order_number }}</strong>.</p>
+
+<div class="order-details">
+    <h3>Payment Details:</h3>
+    <p><strong>Order Number:</strong> {{ order.order_number }}</p>
+    <p><strong>Payment Amount:</strong> KES {{ payment.amount }}</p>
+    <p><strong>Payment Method:</strong> {{ payment.get_gateway_display }}</p>
+    <p><strong>Transaction ID:</strong> {{ payment.transaction_id|default:"Processing" }}</p>
+    <p><strong>Payment Date:</strong> {{ payment.paid_at|date:"F j, Y g:i A" }}</p>
+</div>
+
+<div style="text-align: center;">
+    <a href="{{ order_url }}" class="button">View Order</a>
+</div>
+
+<p>Your order is now being processed and will be shipped soon. You'll receive another notification once it's on its way.</p>
+
+<p>Thank you for your prompt payment!</p>
+
+<p>Best regards,<br>
+<strong>The Wakulima Team</strong></p>
+{% endblock %}

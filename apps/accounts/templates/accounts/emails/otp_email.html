@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Wakulima - Your OTP Code</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+        .header p {
+            margin: 10px 0 0;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 30px;
+        }
+        .otp-box {
+            text-align: center;
+            padding: 25px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px solid #e9ecef;
+        }
+        .otp-code {
+            font-size: 36px;
+            font-weight: bold;
+            letter-spacing: 8px;
+            color: #4CAF50;
+            font-family: 'Courier New', monospace;
+        }
+        .warning {
+            background-color: #fff3cd;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .info-box {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4CAF50;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #eee;
+        }
+        .footer a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        @media only screen and (max-width: 600px) {
+            .container {
+                margin: 10px;
+                width: auto;
+            }
+            .content {
+                padding: 20px;
+            }
+            .otp-code {
+                font-size: 28px;
+                letter-spacing: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌾 Wakulima</h1>
+            <p>Connecting Farmers to Markets</p>
+        </div>
+        
+        <div class="content">
+            <h2>Hello {{ user.full_name }},</h2>
+            <p>You requested to <strong>{{ purpose }}</strong>. Use the following One-Time Password (OTP) to complete your request:</p>
+            
+            <div class="otp-box">
+                <div class="otp-code">{{ otp }}</div>
+                <p style="margin-top: 15px; margin-bottom: 0;">
+                    <strong>⏰ Valid for: {{ expires_in }}</strong>
+                </p>
+            </div>
+            
+            <div class="warning">
+                <strong>⚠️ Security Notice:</strong>
+                <ul style="margin-top: 10px; margin-bottom: 0;">
+                    <li>Never share this OTP with anyone, including Wakulima support</li>
+                    <li>Wakulima will never call you to ask for this code</li>
+                    <li>If you didn't request this, please ignore this email</li>
+                    <li>Your account security is our priority</li>
+                </ul>
+            </div>
+            
+            <div class="info-box">
+                <strong>📋 Important Information:</strong>
+                <ul style="margin-top: 10px; margin-bottom: 0;">
+                    <li>You have <strong>3 attempts</strong> to enter the correct OTP</li>
+                    <li>After 3 failed attempts, you'll need to wait <strong>1 hour</strong> before requesting a new OTP</li>
+                    <li>This OTP will expire in <strong>{{ expires_in }}</strong></li>
+                    <li>For security, never use this OTP on any other website</li>
+                </ul>
+            </div>
+            
+            <p>If you're having trouble, you can request a new OTP after the current one expires.</p>
+            
+            <p>Need help? Contact our support team at <a href="mailto:{{ support_email }}">{{ support_email }}</a></p>
+            
+            <p>Best regards,<br>
+            <strong>The Wakulima Security Team</strong></p>
+        </div>
+        
+        <div class="footer">
+            <p>&copy; {% now "Y" %} Wakulima. All rights reserved.</p>
+            <p>This email was sent to <strong>{{ user.email }}</strong></p>
+            <p>
+                <a href="{{ frontend_url|default:'https://wakulima.com' }}">Visit our website</a> | 
+                <a href="mailto:{{ support_email }}">Contact Support</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

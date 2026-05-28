@@ -1,0 +1,41 @@
+{% extends "notifications/emails/base/base_email.html" %}
+
+{% block title %}Order Cancelled - {{ order.order_number }}{% endblock %}
+
+{% block content %}
+<h2>Order Cancelled</h2>
+
+<p>Hello <strong>{{ order.user.full_name }}</strong>,</p>
+
+<p>Your order <strong>#{{ order.order_number }}</strong> has been cancelled as requested.</p>
+
+<div class="order-details">
+    <h3>Cancelled Order Details</h3>
+    <p><strong>Order Number:</strong> #{{ order.order_number }}</p>
+    <p><strong>Cancelled Date:</strong> {{ order.cancelled_at|date:"F j, Y, g:i a" }}</p>
+    <p><strong>Total Amount:</strong> KES {{ order.total }}</p>
+    
+    {% if order.payment_status == 'paid' %}
+    <div class="info-box">
+        <strong>💰 Refund Information:</strong>
+        <p>Your refund of <strong>KES {{ order.total }}</strong> will be processed within 3-5 business days to your original payment method.</p>
+    </div>
+    {% endif %}
+</div>
+
+<p>We're sorry to see you go! Here's why customers love Wakulima:</p>
+<ul>
+    <li>✓ Direct from farm pricing (save up to 40%)</li>
+    <li>✓ Fresh produce delivered within 48 hours</li>
+    <li>✓ Secure payments via M-Pesa & PayPal</li>
+    <li>✓ 24/7 customer support</li>
+</ul>
+
+<div style="text-align: center;">
+    <a href="{{ frontend_url|default:'https://wakulima.com' }}" class="button">Shop Again</a>
+</div>
+
+<p>Have feedback about why you cancelled? We'd love to hear from you to improve our service.</p>
+
+<p>Questions about your refund? Contact our support team at <a href="mailto:{{ support_email }}">{{ support_email }}</a></p>
+{% endblock %}

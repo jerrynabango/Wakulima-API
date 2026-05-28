@@ -1,0 +1,52 @@
+{% extends "notifications/emails/base/base_email.html" %}
+
+{% block title %}Verify Your Email Address{% endblock %}
+
+{% block content %}
+<h2>Verify Your Email Address</h2>
+
+<p>Hello <strong>{{ user.full_name }}</strong>,</p>
+
+<p>Thank you for registering with Wakulima! Please verify your email address to complete your registration and start enjoying all the features of our platform.</p>
+
+<div class="info-box">
+    <strong>Why verify your email?</strong>
+    <ul style="margin-top: 10px;">
+        <li>Receive order confirmations and updates</li>
+        <li>Get payment notifications and receipts</li>
+        <li>Reset your password securely</li>
+        <li>Stay informed about promotions and offers</li>
+    </ul>
+</div>
+
+<div style="text-align: center;">
+    <a href="{{ verification_url }}" class="button">Verify Email Address</a>
+</div>
+
+<p>If the button doesn't work, copy and paste this link into your browser:</p>
+<p style="word-break: break-all; background: #f5f5f5; padding: 10px; border-radius: 5px;">
+    {{ verification_url }}
+</p>
+
+<div class="warning-box">
+    <strong>⚠️ Important:</strong> This verification link will expire in {{ expires_in|default:"7 days" }}. 
+    If you didn't create an account with Wakulima, please ignore this email.
+</div>
+
+<p>Once verified, you'll have full access to:</p>
+<ul>
+    {% if user.role == 'farmer' %}
+    <li>Product listing and management</li>
+    <li>Order processing dashboard</li>
+    <li>Inventory tracking system</li>
+    {% else %}
+    <li>Product browsing and searching</li>
+    <li>Cart and checkout features</li>
+    <li>Order tracking and history</li>
+    {% endif %}
+</ul>
+
+<p>Questions? Contact our support team at <a href="mailto:{{ support_email }}">{{ support_email }}</a></p>
+
+<p>Thank you for choosing Wakulima!</p>
+{% endblock %}

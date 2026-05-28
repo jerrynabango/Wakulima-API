@@ -1,0 +1,24 @@
+{% extends "notifications/emails/base/base_email.html" %}
+
+{% block title %}Welcome to Wakulima Farmer Network!{% endblock %}
+
+{% block content %}
+<h2>Welcome to the Wakulima Farmer Network! 🌾</h2>
+
+<p>Hello <strong>{{ user.full_name }}</strong>,</p>
+
+<p>Congratulations on upgrading to a farmer account! You now have access to:</p>
+
+<ul>
+    <li>📦 Product listing and management</li>
+    <li>💰 Real-time order notifications</li>
+    <li>📊 Sales analytics and insights</li>
+    <li>🚚 Delivery coordination tools</li>
+</ul>
+
+<div style="text-align: center;">
+    <a href="{{ frontend_url }}/farmer/dashboard" class="button">Start Selling</a>
+</div>
+
+<p>Welcome to the Wakulima farmer family!</p>
+{% endblock %}

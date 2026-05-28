@@ -1,0 +1,37 @@
+{% extends "notifications/emails/base/base_email.html" %}
+
+{% block title %}Order Delivered - {{ order.order_number }}{% endblock %}
+
+{% block content %}
+<h2>Your Order Has Been Delivered! ✅</h2>
+
+<p>Hello <strong>{{ order.user.full_name }}</strong>,</p>
+
+<p>Your order <strong>#{{ order.order_number }}</strong> has been successfully delivered. We hope you enjoy your fresh farm products!</p>
+
+<div class="info-box">
+    <strong>⭐ Enjoyed Your Products?</strong>
+    <p style="margin-top: 10px;">Please take a moment to rate and review the farmer. Your feedback helps farmers improve and helps other customers make informed decisions.</p>
+</div>
+
+<div style="text-align: center;">
+    <a href="{{ order_url }}" class="button">Leave a Review</a>
+</div>
+
+<div class="info-box">
+    <strong>🔄 Want to Order Again?</strong>
+    <ul style="margin-top: 10px;">
+        <li>Save your favorite farmers and products</li>
+        <li>Enable reorder reminders</li>
+        <li>Subscribe to weekly farm fresh boxes</li>
+        <li>Earn loyalty points on every purchase</li>
+    </ul>
+</div>
+
+<p>Share your unboxing experience on social media and tag us! #WakulimaFresh</p>
+
+<p>Thank you for supporting local farmers and sustainable agriculture!</p>
+
+<p>Best regards,<br>
+<strong>The Wakulima Team</strong></p>
+{% endblock %}
