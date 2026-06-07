@@ -1,3 +1,13 @@
-from .product_service import CategoryService, ProductService, InventoryService, ReviewService
+from .product_service import (
+    CategoryService,
+    InventoryService,
+    ProductService,
+    ReviewService,
+)
 
-__all__ = ['CategoryService', 'ProductService', 'InventoryService', 'ReviewService']
+__all__ = [
+    "CategoryService",
+    "ProductService",
+    "InventoryService",
+    "ReviewService",
+]

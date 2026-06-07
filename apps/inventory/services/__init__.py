@@ -1,11 +1,13 @@
 from .inventory_service import (
-    InventoryService, StockMovementService, 
-    StockAlertService, InventoryReservationService
+    InventoryReservationService,
+    InventoryService,
+    StockAlertService,
+    StockMovementService,
 )
 
 __all__ = [
-    'InventoryService',
-    'StockMovementService', 
-    'StockAlertService',
-    'InventoryReservationService'
+    "InventoryService",
+    "StockMovementService",
+    "StockAlertService",
+    "InventoryReservationService",
 ]

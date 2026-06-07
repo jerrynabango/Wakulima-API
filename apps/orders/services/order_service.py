@@ -1,45 +1,53 @@
-from decimal import Decimal
-from django.db import transaction
-from django.utils import timezone
-from django.shortcuts import get_object_or_404
-from apps.orders.models import Order, OrderItem, OrderActivity
-from apps.cart.models import Cart
-from apps.products.models import InventoryHistory
-from apps.orders.tasks import send_order_confirmation_email
 import logging
+from decimal import Decimal
+
+from django.db import models, transaction
+from django.shortcuts import get_object_or_404
+from django.utils import timezone
+
+from apps.cart.models import Cart
+from apps.notifications.choices import (
+    NotificationCategory,
+    NotificationPriority,
+    NotificationType,
+)
+from apps.notifications.models import Notification
+from apps.orders.models import Order, OrderActivity, OrderItem
+from apps.orders.tasks import send_order_confirmation_email
+from apps.products.models import InventoryHistory
 
 logger = logging.getLogger(__name__)
 
+
 class OrderService:
     """Business logic for order operations"""
-    
+
     @staticmethod
     @transaction.atomic
     def create_order_from_cart(user, order_data, request_ip=None):
-        """
-        Create order from user's cart
-        Returns: {'success': bool, 'order': Order, 'message': str, 'errors': dict}
-        """
+        """Create order from user's cart"""
         try:
-            # Get user's cart
             cart = get_object_or_404(Cart, user=user)
-            
+
             if cart.total_items == 0:
                 return {
-                    'success': False,
-                    'message': 'Cart is empty',
-                    'errors': {'cart': 'No items to checkout'}
+                    "success": False,
+                    "message": "Cart is empty",
+                    "errors": {"cart": "No items to checkout"},
                 }
-            
+
             # Validate cart items stock
             for item in cart.items.all():
                 if item.quantity > item.product.quantity:
                     return {
-                        'success': False,
-                        'message': f'{item.product.name} only has {item.product.quantity} {item.product.unit_type} in stock',
-                        'errors': {'stock': item.product.name}
+                        "success": False,
+                        "message": f"{
+                            item.product.name} only has {
+                            item.product.quantity} {
+                            item.product.unit_type} in stock",
+                        "errors": {"stock": item.product.name},
                     }
-            
+
             # Create order
             order = Order.objects.create(
                 user=user,
@@ -47,17 +55,16 @@ class OrderService:
                 delivery_fee=cart.delivery_fee,
                 tax=cart.tax,
                 total=cart.total,
-                payment_method=order_data['payment_method'],
-                shipping_address=order_data['shipping_address'],
-                shipping_city=order_data['shipping_city'],
-                shipping_zip_code=order_data['shipping_zip_code'],
-                shipping_phone=order_data['shipping_phone'],
-                customer_note=order_data.get('customer_note', '')
+                payment_method=order_data["payment_method"],
+                shipping_address=order_data["shipping_address"],
+                shipping_city=order_data["shipping_city"],
+                shipping_zip_code=order_data["shipping_zip_code"],
+                shipping_phone=order_data["shipping_phone"],
+                customer_note=order_data.get("customer_note", ""),
             )
-            
+
             # Create order items and update inventory
             for cart_item in cart.items.all():
-                # Create order item
                 OrderItem.objects.create(
                     order=order,
                     product=cart_item.product,
@@ -65,76 +72,126 @@ class OrderService:
                     product_price=cart_item.product.price,
                     quantity=cart_item.quantity,
                     unit_price=cart_item.unit_price,
-                    total_price=cart_item.total_price
+                    total_price=cart_item.total_price,
                 )
-                
+
                 # Update product inventory
                 cart_item.product.quantity -= cart_item.quantity
                 cart_item.product.save()
-                
-                # Create inventory history
+
                 InventoryHistory.objects.create(
                     product=cart_item.product,
                     user=user,
                     change_type=InventoryHistory.ChangeType.ORDER,
                     quantity_change=-cart_item.quantity,
-                    previous_quantity=cart_item.product.quantity + cart_item.quantity,
+                    previous_quantity=cart_item.product.quantity
+                    + cart_item.quantity,
                     new_quantity=cart_item.product.quantity,
-                    reason=f"Order #{order.order_number}",
-                    reference_id=str(order.id)
+                    reason=f"Order #{
+                        order.order_number}",
+                    reference_id=str(order.id),
                 )
-            
+
             # Log order activity
             OrderActivity.objects.create(
                 order=order,
                 activity_type=OrderActivity.ActivityType.CREATED,
                 description="Order created via cart checkout",
                 performed_by=user,
-                ip_address=request_ip or 'system'
+                ip_address=request_ip or "system",
             )
-            
+
+            # **NEW: Create in-app notification for the user**
+            notification = Notification.objects.create(
+                user=user,
+                notification_type=NotificationType.IN_APP,
+                category=NotificationCategory.ORDER,
+                priority=NotificationPriority.HIGH,
+                title=f"Order Confirmed - #{order.order_number}",
+                message=f"Your order #{order.order_number} has been confirmed. Total: KES {order.total}",
+                reference_id=str(order.id),
+                metadata={
+                    "order_id": str(order.id),
+                    "order_number": order.order_number,
+                    "total": str(order.total),
+                },
+            )
+            logger.info(
+                f"In-app notification created for order {order.order_number}: {notification.id}"
+            )
+
             # Clear cart
             cart.clear()
-            
+
             # Send confirmation email (async)
             send_order_confirmation_email.delay(order.id)
-            
-            logger.info(f"Order {order.order_number} created for user {user.email}")
-            
+
+            logger.info(f"Order {
+                    order.order_number} created for user {
+                    user.email}")
+
             return {
-                'success': True,
-                'order': order,
-                'message': f'Order {order.order_number} created successfully'
+                "success": True,
+                "order": order,
+                "message": f"Order {order.order_number} created successfully",
             }
-            
+
         except Exception as e:
             logger.error(f"Error creating order: {str(e)}")
             return {
-                'success': False,
-                'message': 'Failed to create order',
-                'errors': {'system': str(e)}
+                "success": False,
+                "message": "Failed to create order",
+                "errors": {"system": str(e)},
             }
-    
+
+    @staticmethod
+    def get_user_orders(user, filters=None):
+        """Get orders for a user with optional filters"""
+        queryset = Order.objects.filter(user=user)
+
+        if filters:
+            if filters.get("status"):
+                queryset = queryset.filter(order_status=filters["status"])
+            if filters.get("from_date"):
+                queryset = queryset.filter(
+                    created_at__date__gte=filters["from_date"]
+                )
+            if filters.get("to_date"):
+                queryset = queryset.filter(
+                    created_at__date__lte=filters["to_date"]
+                )
+
+        return queryset.select_related("user").order_by("-created_at")
+
+    @staticmethod
+    def get_farmer_orders(farmer):
+        """Get orders containing farmer's products"""
+        if not farmer.is_farmer:
+            return Order.objects.none()
+
+        return (
+            Order.objects.filter(items__product__farmer=farmer)
+            .distinct()
+            .select_related("user")
+        )
+
     @staticmethod
     @transaction.atomic
     def cancel_order(order, user, request_ip=None):
-        """
-        Cancel order and restore inventory
-        Returns: {'success': bool, 'message': str}
-        """
+        """Cancel order and restore inventory"""
         if not order.can_cancel:
             return {
-                'success': False,
-                'message': f'Order cannot be cancelled in {order.order_status} status'
+                "success": False,
+                "message": f"Order cannot be cancelled in {
+                    order.order_status} status",
             }
-        
+
         # Restore inventory for each item
         for item in order.items.all():
             if item.product:
                 item.product.quantity += item.quantity
                 item.product.save()
-                
-                # Create inventory history
+
                 InventoryHistory.objects.create(
                     product=item.product,
                     user=user,
@@ -143,51 +200,39 @@ class OrderService:
                     previous_quantity=item.product.quantity - item.quantity,
                     new_quantity=item.product.quantity,
                     reason=f"Order cancelled - {order.order_number}",
-                    reference_id=str(order.id)
+                    reference_id=str(order.id),
                 )
-        
+
         # Update order status
         order.order_status = Order.OrderStatus.CANCELLED
         order.cancelled_at = timezone.now()
         order.save()
-        
+
+        # **NEW: Create in-app notification for cancellation**
+        Notification.objects.create(
+            user=order.user,
+            notification_type=NotificationType.IN_APP,
+            category=NotificationCategory.ORDER,
+            priority=NotificationPriority.HIGH,
+            title=f"Order Cancelled - #{order.order_number}",
+            message=f"Your order #{order.order_number} has been cancelled.",
+            reference_id=str(order.id),
+            metadata={
+                "order_id": str(order.id),
+                "order_number": order.order_number,
+                "cancelled_by": user.email,
+            },
+        )
+
         # Log activity
         OrderActivity.objects.create(
             order=order,
             activity_type=OrderActivity.ActivityType.CANCELLED,
             description=f"Order cancelled by {user.email}",
             performed_by=user,
-            ip_address=request_ip or 'system'
+            ip_address=request_ip or "system",
         )
-        
+
         logger.info(f"Order {order.order_number} cancelled by {user.email}")
-        
-        return {
-            'success': True,
-            'message': 'Order cancelled successfully'
-        }
-    
-    @staticmethod
-    def get_user_orders(user, filters=None):
-        """Get orders for a user with optional filters"""
-        queryset = Order.objects.filter(user=user)
-        
-        if filters:
-            if filters.get('status'):
-                queryset = queryset.filter(order_status=filters['status'])
-            if filters.get('from_date'):
-                queryset = queryset.filter(created_at__date__gte=filters['from_date'])
-            if filters.get('to_date'):
-                queryset = queryset.filter(created_at__date__lte=filters['to_date'])
-        
-        return queryset.select_related('user').order_by('-created_at')
-    
-    @staticmethod
-    def get_farmer_orders(farmer):
-        """Get orders containing farmer's products"""
-        if not farmer.is_farmer:
-            return Order.objects.none()
-        
-        return Order.objects.filter(
-            items__product__farmer=farmer
-        ).distinct().select_related('user')
+
+        return {"success": True, "message": "Order cancelled successfully"}

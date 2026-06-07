@@ -1,8 +1,10 @@
-from rest_framework import serializers
+import re
+
 from django.contrib.auth.password_validation import validate_password
 from django.core.validators import EmailValidator
 from django.utils import timezone
-import re
+from rest_framework import serializers
+
 from apps.accounts.models import User, UserActivityLog
 
 
@@ -45,7 +47,9 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
         if not value or not value.strip():
             raise serializers.ValidationError("Full name cannot be empty")
         if len(value) < 2:
-            raise serializers.ValidationError("Full name must be at least 2 characters")
+            raise serializers.ValidationError(
+                "Full name must be at least 2 characters"
+            )
         if len(value) > 255:
             raise serializers.ValidationError(
                 "Full name must be less than 255 characters"
@@ -58,7 +62,7 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
             phone_pattern = re.compile(r"^\+?1?\d{9,15}$")
             if not phone_pattern.match(value):
                 raise serializers.ValidationError(
-                    "Phone number must be in international format (e.g., +254712345678)"
+                    "Phone number must be in international format (+254712345678)"
                 )
         return value
 
@@ -75,7 +79,9 @@ class ProfilePictureSerializer(serializers.ModelSerializer):
         if value:
             # Check file size (max 5MB)
             if value.size > 5 * 1024 * 1024:
-                raise serializers.ValidationError("Profile picture cannot exceed 5MB")
+                raise serializers.ValidationError(
+                    "Profile picture cannot exceed 5MB"
+                )
 
             # Check file extension
             allowed_extensions = ["jpg", "jpeg", "png", "gif"]
@@ -97,7 +103,14 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("email", "full_name", "phone_number", "password", "password2", "role")
+        fields = (
+            "email",
+            "full_name",
+            "phone_number",
+            "password",
+            "password2",
+            "role",
+        )
         extra_kwargs = {
             "email": {"required": True, "validators": [EmailValidator()]},
             "full_name": {"required": True},
@@ -107,7 +120,9 @@ class RegisterSerializer(serializers.ModelSerializer):
     def validate_email(self, value):
         """Check if email already exists"""
         if User.objects.filter(email__iexact=value).exists():
-            raise serializers.ValidationError("A user with this email already exists")
+            raise serializers.ValidationError(
+                "A user with this email already exists"
+            )
         return value.lower()
 
     def validate(self, attrs):
@@ -141,7 +156,9 @@ class ChangePasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(
         required=True, write_only=True, validators=[validate_password]
     )
-    confirm_new_password = serializers.CharField(required=True, write_only=True)
+    confirm_new_password = serializers.CharField(
+        required=True, write_only=True
+    )
 
     def validate_old_password(self, value):
         """Check if old password is correct"""
@@ -159,7 +176,9 @@ class ChangePasswordSerializer(serializers.Serializer):
 
         if attrs["old_password"] == attrs["new_password"]:
             raise serializers.ValidationError(
-                {"new_password": "New password must be different from current password"}
+                {
+                    "new_password": "New password must be different from current password"
+                }
             )
 
         return attrs
@@ -189,7 +208,9 @@ class ResetPasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(
         required=True, write_only=True, validators=[validate_password]
     )
-    confirm_new_password = serializers.CharField(required=True, write_only=True)
+    confirm_new_password = serializers.CharField(
+        required=True, write_only=True
+    )
 
     def validate(self, attrs):
         """Validate token and passwords"""
@@ -208,7 +229,9 @@ class ResetPasswordSerializer(serializers.Serializer):
                 )
             attrs["user"] = user
         except User.DoesNotExist:
-            raise serializers.ValidationError({"token": "Invalid password reset token"})
+            raise serializers.ValidationError(
+                {"token": "Invalid password reset token"}
+            )
 
         return attrs
 
@@ -224,36 +247,41 @@ class UserActivityLogSerializer(serializers.ModelSerializer):
 
 # ========== OTP and Farmer Upgrade Serializers ==========
 
+
 class RequestOTPSerializer(serializers.Serializer):
     """Serializer for requesting OTP"""
+
     email = serializers.EmailField(required=True)
     purpose = serializers.ChoiceField(
-        choices=['password_reset', 'email_verification'],
-        required=True
+        choices=["password_reset", "email_verification"], required=True
     )
 
 
 class VerifyOTPSerializer(serializers.Serializer):
     """Serializer for verifying OTP"""
+
     email = serializers.EmailField(required=True)
     otp = serializers.CharField(min_length=6, max_length=6, required=True)
     purpose = serializers.ChoiceField(
-        choices=['password_reset', 'email_verification', 'farmer_upgrade'],
-        required=True
+        choices=["password_reset", "email_verification", "farmer_upgrade"],
+        required=True,
     )
 
 
 class ResetPasswordWithOTPSerializer(serializers.Serializer):
     """Serializer for resetting password with OTP"""
+
     email = serializers.EmailField(required=True)
     otp = serializers.CharField(min_length=6, max_length=6, required=True)
     new_password = serializers.CharField(
         write_only=True, required=True, validators=[validate_password]
     )
-    confirm_new_password = serializers.CharField(write_only=True, required=True)
+    confirm_new_password = serializers.CharField(
+        write_only=True, required=True
+    )
 
     def validate(self, attrs):
-        if attrs['new_password'] != attrs['confirm_new_password']:
+        if attrs["new_password"] != attrs["confirm_new_password"]:
             raise serializers.ValidationError(
                 {"confirm_new_password": "Passwords don't match"}
             )
@@ -262,16 +290,19 @@ class ResetPasswordWithOTPSerializer(serializers.Serializer):
 
 class FarmerUpgradeRequestSerializer(serializers.Serializer):
     """Serializer for requesting farmer upgrade"""
-    pass  # No fields needed - just the endpoint
+
+    pass
 
 
 class FarmerUpgradeVerifySerializer(serializers.Serializer):
     """Serializer for verifying farmer upgrade OTP"""
+
     otp = serializers.CharField(min_length=6, max_length=6, required=True)
 
 
 class FarmerRequestStatusSerializer(serializers.Serializer):
     """Serializer for farmer request status"""
+
     has_requested = serializers.BooleanField()
     status = serializers.CharField(allow_null=True)
     requested_at = serializers.DateTimeField(allow_null=True)

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wakulima API · Developer Portal</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Swagger UI -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/drf_spectacular/swagger.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌾</text></svg>">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="nav-bar">
+        <div class="nav-container">
+            <div class="nav-brand" onclick="window.location.href='/swagger/'">
+                <span class="brand-icon">🌾</span>
+                <span class="brand-text">Wakulima</span>
+                <span class="brand-badge">API</span>
+            </div>
+            <div class="nav-links">
+                <a href="/redoc/" class="nav-link" target="_blank">
+                    <i class="fas fa-book"></i>
+                    <span>ReDoc</span>
+                </a>
+                <a href="#" class="nav-link" id="adminLink">
+                    <i class="fas fa-cog"></i>
+                    <span>Admin</span>
+                </a>
+                <a href="https://github.com/jerrynabango/Wakulima-API.git" target="_blank" class="nav-link">
+                    <i class="fab fa-github"></i>
+                    <span>GitHub</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-container">
+            <h1 class="hero-title">Wakulima API</h1>
+            <p class="hero-subtitle">
+                Empowering African farmers through modern technology.
+                Click any module below to explore its API endpoints.
+            </p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number">7</span>
+                    <span class="stat-label">Modules</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">50+</span>
+                    <span class="stat-label">Endpoints</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">JWT</span>
+                    <span class="stat-label">Auth</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Module Cards Section -->
+    <section class="modules-section">
+        <div class="modules-grid" id="modulesGrid">
+            <div class="module-card" data-module="Accounts">
+                <div class="module-icon"><i class="fas fa-users"></i></div>
+                <h3>Accounts</h3>
+                <p>User management, authentication, profile, roles, OTP verification, farmer upgrade.</p>
+                <div class="module-stats">
+                    <span><i class="fas fa-key"></i> JWT Auth</span>
+                    <span><i class="fas fa-user-tag"></i> 4 Roles</span>
+                    <span><i class="fas fa-mobile-alt"></i> OTP</span>
+                </div>
+                <div class="active-indicator"></div>
+            </div>
+            <div class="module-card" data-module="Products">
+                <div class="module-icon"><i class="fas fa-box"></i></div>
+                <h3>Products</h3>
+                <p>Product CRUD, categories, inventory, multi-image upload, reviews.</p>
+                <div class="module-stats">
+                    <span><i class="fas fa-image"></i> Images</span>
+                    <span><i class="fas fa-tags"></i> Categories</span>
+                    <span><i class="fas fa-star"></i> Reviews</span>
+                </div>
+                <div class="active-indicator"></div>
+            </div>
+            <div class="module-card" data-module="Cart">
+                <div class="module-icon"><i class="fas fa-shopping-cart"></i></div>
+                <h3>Cart</h3>
+                <p>Shopping cart management, quantity updates, checkout preparation.</p>
+                <div class="module-stats">
+                    <span><i class="fas fa-calculator"></i> Auto-calc</span>
+                    <span><i class="fas fa-truck"></i> Delivery</span>
+                </div>
+                <div class="active-indicator"></div>
+            </div>
+            <div class="module-card" data-module="Orders">
+                <div class="module-icon"><i class="fas fa-clipboard-list"></i></div>
+                <h3>Orders</h3>
+                <p>Order creation, tracking, cancellation, status management, history.</p>
+                <div class="module-stats">
+                    <span><i class="fas fa-truck"></i> Tracking</span>
+                    <span><i class="fas fa-history"></i> History</span>
+                </div>
+                <div class="active-indicator"></div>
+            </div>
+            <div class="module-card" data-module="Payments">
+                <div class="module-icon"><i class="fas fa-credit-card"></i></div>
+                <h3>Payments</h3>
+                <p>M-Pesa STK Push, PayPal integration, payment status, refunds.</p>
+                <div class="module-stats">
+                    <span><i class="fas fa-mobile-alt"></i> M-Pesa</span>
+                    <span><i class="fab fa-paypal"></i> PayPal</span>
+                </div>
+                <div class="active-indicator"></div>
+            </div>
+            <div class="module-card" data-module="Inventory">
+                <div class="module-icon"><i class="fas fa-warehouse"></i></div>
+                <h3>Inventory</h3>
+                <p>Stock management, movement history, low stock alerts, bulk updates.</p>
+                <div class="module-stats">
+                    <span><i class="fas fa-chart-line"></i> Tracking</span>
+                    <span><i class="fas fa-bell"></i> Alerts</span>
+                </div>
+                <div class="active-indicator"></div>
+            </div>
+            <div class="module-card" data-module="Notifications">
+                <div class="module-icon"><i class="fas fa-bell"></i></div>
+                <h3>Notifications</h3>
+                <p>In-app notifications, email (SMTP), SMS (Africa's Talking).</p>
+                <div class="module-stats">
+                    <span><i class="fas fa-envelope"></i> Email</span>
+                    <span><i class="fas fa-sms"></i> SMS</span>
+                </div>
+                <div class="active-indicator"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Swagger UI Container -->
+    <main class="main-wrapper">
+        <div id="currentModuleBar" class="current-module">
+            <div class="module-info">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <h2 id="currentModuleName">Select a Module</h2>
+                    <p id="currentModuleDesc">Click any card above to view its API endpoints</p>
+                </div>
+            </div>
+            <button class="close-module" id="closeModuleBtn">Close Module</button>
+        </div>
+
+        <div id="api-info-card" class="api-info-card">
+            <h3>🔐 Authentication Required</h3>
+            <p>Most endpoints require JWT authentication. Click the <strong>Authorize</strong> button below and enter: <code>Bearer &lt;your_token&gt;</code></p>
+            <div class="badge-list">
+                <span class="badge"><i class="fas fa-user"></i> Customer</span>
+                <span class="badge"><i class="fas fa-tractor"></i> Farmer</span>
+                <span class="badge"><i class="fas fa-shield-alt"></i> Admin</span>
+                <span class="badge"><i class="fas fa-headset"></i> Support</span>
+            </div>
+        </div>
+        
+        <div id="swagger-ui"></div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>🌾 Wakulima</h4>
+                <p>Connecting farmers directly to consumers across Africa.</p>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://github.com/wakulima/wakulima-api" target="_blank"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#" id="changelogLink">Changelog</a></li>
+                    <li><a href="#" id="statusLink">API Status</a></li>
+                    <li><a href="#" id="supportLink">Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#" id="termsLink">Terms of Service</a></li>
+                    <li><a href="#" id="privacyLink">Privacy Policy</a></li>
+                    <li><a href="#" id="licenseLink">MIT License</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <ul>
+                    <li><a href="mailto:support@wakulima.com"><i class="fas fa-envelope"></i> support@wakulima.com</a></li>
+                    <li><a href="#"><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-copyright">
+                © 2026 Wakulima · Built with ❤️ in Africa
+            </div>
+            <div class="footer-social">
+                <a href="#" id="termsFooterLink">Terms</a>
+                <a href="#" id="privacyFooterLink">Privacy</a>
+                <a href="#" id="licenseFooterLink">License</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Terms of Service</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-standalone-preset.js"></script>
+    <script src="/static/drf_spectacular/swagger.js"></script>
+    <script>
+        window.onload = function() {
+            const ui = SwaggerUIBundle({
+                url: "/swagger.json",
+                dom_id: '#swagger-ui',
+                deepLinking: true,
+                presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
+                plugins: [SwaggerUIBundle.plugins.DownloadUrl],
+                layout: "BaseLayout",
+                validatorUrl: null,
+                defaultModelsExpandDepth: 1,
+                docExpansion: "none",
+                filter: true,
+                showExtensions: false,
+                showCommonExtensions: true,
+                supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
+                authorizations: { "Bearer": { type: "apiKey", name: "Authorization", in: "header", description: "JWT Token. Format: Bearer &lt;your_token&gt;" } },
+                persistAuthorization: true,
+                tagsSorter: 'alpha',
+                operationsSorter: 'alpha',
+                syntaxHighlight: { activated: true, theme: 'agate' }
+            });
+            window.ui = ui;
+        };
+    </script>
+</body>
+</html>

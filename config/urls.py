@@ -15,44 +15,51 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from django.contrib import admin
-from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from rest_framework import permissions
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
-
-schema_view = get_schema_view(
-    openapi.Info(
-        title="Wakulima API",
-        default_version="v1",
-        description="API documentation for Wakulima E-commerce Platform",
-        terms_of_service="https://www.wakulima.com/terms/",
-        contact=openapi.Contact(email="support@wakulima.com"),
-        license=openapi.License(name="BSD License"),
-    ),
-    public=True,
-    permission_classes=(permissions.AllowAny,),
+from django.contrib import admin
+from django.urls import include, path
+from django.views.generic import RedirectView
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
 )
 
 urlpatterns = [
+    # Redirect root to API documentation
+    path(
+        "",
+        RedirectView.as_view(url="/swagger/", permanent=False),
+        name="index",
+    ),
+    # Admin
     path("admin/", admin.site.urls),
+    # API routes
     path("api/v1/auth/", include("apps.accounts.api.urls")),
-    path('api/v1/', include('apps.products.api.urls')),
-    path('api/v1/', include('apps.cart.api.urls')),
-    path('api/v1/', include('apps.orders.api.urls')),
-    path('api/v1/', include('apps.payments.api.urls')),
-    path('api/v1/', include('apps.notifications.api.urls')),
-    path('api/v1/', include('apps.inventory.api.urls')),
-    # API Documentation
+    path("api/v1/", include("apps.products.api.urls")),
+    path("api/v1/", include("apps.cart.api.urls")),
+    path("api/v1/", include("apps.orders.api.urls")),
+    path("api/v1/", include("apps.payments.api.urls")),
+    path("api/v1/", include("apps.notifications.api.urls")),
+    path("api/v1/", include("apps.inventory.api.urls")),
+    # API Documentation with drf-spectacular
+    path("swagger.json", SpectacularAPIView.as_view(), name="schema"),
     path(
         "swagger/",
-        schema_view.with_ui("swagger", cache_timeout=0),
-        name="schema-swagger-ui",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger-ui",
     ),
-    path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
+    path(
+        "redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"
+    ),
 ]
 
+# Serve media files in development
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(
+        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
+    )
+
+# Format, sort imports, and check all in one line
+# black apps/ --exclude "migrations|__pycache__|venv|env|tests" --line-length 79 && isort apps/ --skip migrations --skip __pycache__ --skip tests --profile black --line-length 79 && flake8 apps/ --exclude migrations,__pycache__,venv,env,tests --max-line-length 79 --extend-ignore E203,W503
